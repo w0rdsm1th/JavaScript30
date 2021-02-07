@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Document</title>
+    <meta charset="UTF-8">
+    <title>Document</title>
 </head>
 <body>
 
-  <div class="site-wrap">
+<div class="site-wrap">
 
     <h1>Slide in on Scroll</h1>
 
@@ -21,7 +21,7 @@
 
     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates, deserunt facilis et iste corrupti omnis tenetur est. Iste ut est dicta dolor itaque adipisci, dolorum minima, veritatis earum provident error molestias. Ratione magni illo sint vel velit ut excepturi consectetur suscipit, earum modi accusamus voluptatem nostrum, praesentium numquam, reiciendis voluptas sit id quisquam. Consequatur in quis reprehenderit modi perspiciatis necessitatibus saepe, quidem, suscipit iure natus dignissimos ipsam, eligendi deleniti accusantium, rerum quibusdam fugit perferendis et optio recusandae sed ratione. Culpa, dolorum reprehenderit harum ab voluptas fuga, nisi eligendi natus maiores illum quas quos et aperiam aut doloremque optio maxime fugiat doloribus. Eum dolorum expedita quam, nesciunt</p>
 
-    <img src="http://unsplash.it/400/401" class="align-right slide-in">
+    <img src="http://unsplash.it/400/401" class="align-right slide-in" alt="">
 
     <p> at provident praesentium atque quas rerum optio dignissimos repudiandae ullam illum quibusdam. Vel ad error quibusdam, illo ex totam placeat. Quos excepturi fuga, molestiae ea quisquam minus, ratione dicta consectetur officia omnis, doloribus voluptatibus? Veniam ipsum veritatis architecto, provident quas consequatur doloremque quam quidem earum expedita, ad delectus voluptatum, omnis praesentium nostrum qui aspernatur ea eaque adipisci et cumque ab? Ea voluptatum dolore itaque odio. Eius minima distinctio harum, officia ab nihil exercitationem. Tempora rem nemo nam temporibus molestias facilis minus ipsam quam doloribus consequatur debitis nesciunt tempore officiis aperiam quisquam, molestiae voluptates cum, fuga culpa. Distinctio accusamus quibusdam, tempore perspiciatis dolorum optio facere consequatur quidem ullam beatae architecto, ipsam sequi officiis dignissimos amet impedit natus necessitatibus tenetur repellendus dolor rem! Dicta dolorem, iure, facilis illo ex nihil ipsa amet officia, optio temporibus eum autem odit repellendus nisi. Possimus modi, corrupti error debitis doloribus dicta libero earum, sequi porro ut excepturi nostrum ea voluptatem nihil culpa? Ullam expedita eligendi obcaecati reiciendis velit provident omnis quas qui in corrupti est dolore facere ad hic, animi soluta assumenda consequuntur reprehenderit! Voluptate dolor nihil veniam laborum voluptas nisi pariatur sed optio accusantium quam consectetur, corrupti, sequi et consequuntur, excepturi doloremque. Tempore quis velit corporis neque fugit non sequi eaque rem hic. Facere, inventore, aspernatur. Accusantium modi atque, asperiores qui nobis soluta cumque suscipit excepturi possimus doloremque odit saepe perferendis temporibus molestiae nostrum voluptatum quis id sint quidem nesciunt culpa. Rerum labore dolor beatae blanditiis praesentium explicabo velit optio esse aperiam similique, voluptatem cum, maiores ipsa tempore. Reiciendis sed culpa atque inventore, nam ullam enim expedita consectetur id velit iusto alias vitae explicabo nemo neque odio reprehenderit soluta sint eaque. Aperiam, qui ut tenetur, voluptate doloremque officiis dicta quaerat voluptatem rerum natus magni. Eum amet autem dolor ullam.</p>
 
@@ -40,84 +40,114 @@
 
 
 
-  </div>
+</div>
 
-  <script>
+<script>
     function debounce(func, wait = 20, immediate = true) {
-      var timeout;
-      return function() {
-        var context = this, args = arguments;
-        var later = function() {
-          timeout = null;
-          if (!immediate) func.apply(context, args);
+        // framework free tutorial, so borrowed this off web elsewhere 
+        // debouncing: limiting or throttling the number of function calls
+        var timeout;
+        return function() {
+            var context = this, args = arguments;
+            var later = function() {
+                timeout = null;
+                if (!immediate) func.apply(context, args);
+            };
+            var callNow = immediate && !timeout;
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+            if (callNow) func.apply(context, args);
         };
-        var callNow = immediate && !timeout;
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-        if (callNow) func.apply(context, args);
-      };
     }
+    // const sliderImages = document.querySelectorAll('.slide-in');
+    const sliderImages = document.querySelectorAll('img');
 
-  </script>
+    function checkSlide(e){
+        // console.log(e);
+        // console.count(e);
 
-  <style>
+        // logic: loop over each image and 
+        sliderImages.forEach(sliderImage => {
+            //    want the image to slide in as current slide == half slide
+            const slideInAt = (window.scrollY + window.innerHeight) - sliderImage.height / 2;
+
+            //    also want image to slide out if we scroll past
+            const imageBottom = sliderImage.offsetTop + sliderImage.height;
+            
+            // storing his if-statement checks as variables for clarity 
+            const isHalfShown = slideInAt > sliderImage.offsetTop;
+            const isNotScrolledPast = window.scrollY < imageBottom;
+            
+            if (isHalfShown && isNotScrolledPast) {
+                sliderImage.classList.add('active');
+            } else {
+                sliderImage.classList.remove('active');
+            }
+        })
+
+    }
+    window.addEventListener('scroll', debounce(checkSlide, immediate = true));
+
+</script>
+
+<style>
     html {
-      box-sizing: border-box;
-      background: #ffc600;
-      font-family: 'helvetica neue';
-      font-size: 20px;
-      font-weight: 200;
+        box-sizing: border-box;
+        background: #ffc600;
+        font-family: 'helvetica neue';
+        font-size: 20px;
+        font-weight: 200;
     }
-    
+
     body {
-      margin: 0;
+        margin: 0;
     }
-    
+
     *, *:before, *:after {
-      box-sizing: inherit;
+        box-sizing: inherit;
     }
 
     h1 {
-      margin-top: 0;
+        margin-top: 0;
     }
 
     .site-wrap {
-      max-width: 700px;
-      margin: 100px auto;
-      background: white;
-      padding: 40px;
-      text-align: justify;
+        max-width: 700px;
+        margin: 100px auto;
+        background: white;
+        padding: 40px;
+        text-align: justify;
     }
 
     .align-left {
-      float: left;
-      margin-right: 20px;
+        float: left;
+        margin-right: 20px;
     }
 
     .align-right {
-      float: right;
-      margin-left: 20px;
+        float: right;
+        margin-left: 20px;
     }
 
     .slide-in {
-      opacity: 0;
-      transition: all .5s;
+        opacity: 0;
+        transition: all .5s;
     }
 
     .align-left.slide-in {
-      transform: translateX(-30%) scale(0.95);
+        transform: translateX(-30%) scale(0.95);
     }
-    
+
     .align-right.slide-in {
-      transform: translateX(30%) scale(0.95);
+        transform: translateX(30%) scale(0.95);
     }
 
     .slide-in.active {
-      opacity: 1;
-      transform: translateX(0%) scale(1);
+        opacity: 1;
+        transform: translateX(0%) scale(1);
     }
 
-  </style>
+</style>
 
 </body>
 </html>

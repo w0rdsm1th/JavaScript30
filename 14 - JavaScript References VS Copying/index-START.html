@@ -8,16 +8,45 @@
 
   <script>
     // start with strings, numbers and booleans
+    
+    // primitive types: dont change!!
+    let age = 100;
+    let age2 = age;
+    console.log(age, age2);
+    age = 200;  // modify
+    console.log(age, age2);
+    
+    let name = 'Aleks';
+    let name2 = name;
+    console.log(name, name2);
+    name2 = 'Hughes'
+    console.log(name, name2);
 
+    // attempting to change the type
+    name2 = '43';
+    console.warn(name, name2);
+    name2 = 43;
+    console.warn(name, name2);
+    name2  = ['Wes', 'Sarah', 'Ryan', 'Poppy'];
+    console.warn(name, name2);
+    name2[3] = 'oh man oh man';
+    console.warn(name, name2);
+    
+    
     // Let's say we have an array
     const players = ['Wes', 'Sarah', 'Ryan', 'Poppy'];
 
     // and we want to make a copy of it.
+    const team = players;
 
     // You might think we can just do something like this:
-
+    team[3] = 'Lux';
+    
     // however what happens when we update that array?
-
+    console.log(players, team);
+    
+    // LEARNING team is not the array itself, just a reference to an array
+    
     // now here is the problem!
 
     // oh no - we have edited the original array too!
@@ -25,14 +54,24 @@
     // Why? It's because that is an array reference, not an array copy. They both point to the same array!
 
     // So, how do we fix this? We take a copy instead!
-
+    
     // one way
+    const team2 = players.slice();  // slice with no args will take full deep copy of the array
+    team2[0] = 'team2\'s slightly underwhelming new captain'
+    console.log(team, team2);
 
     // or create a new array and concat the old one in
+    const team3 = [].concat(team)  // empty array 
+    team3[0] = 'team3\'s dashing new captain'
+    console.log(team, team3);
 
     // or use the new ES6 Spread
+    const team4 = [...players];  // ES6 'spread' to take items out of the original and into the new
+    console.log(team, team4);
 
     // now when we update it, the original one isn't changed
+    team4[2] = "a brand new player that nobody knew about before. you wouldn't know him, he goes to a different school";
+    console.log(team, team4);
 
     // The same thing goes for objects, let's say we have a person object
 

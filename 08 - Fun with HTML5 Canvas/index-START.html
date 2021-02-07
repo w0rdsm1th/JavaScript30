@@ -1,18 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>HTML5 Canvas</title>
+    <meta charset="UTF-8">
+    <title>HTML5 Canvas</title>
 </head>
 <body>
 <canvas id="draw" width="800" height="800"></canvas>
 <script>
+    const canvas = document.querySelector('#draw');
+    <!--    DONT draw directly on the canvas in HTML, draw on the context (CAN BE 3D!!) -->
+    const ctx = canvas.getContext('2d');
+
+    ctx.width = window.innerWidth;
+    ctx.height = window.innerHeight;
+    ctx.lineWidth = 20;
+    // whenever draw on something, need an initial colour
+    ctx.strokeStyle = '#e042f5';
+
+    // will blend the colours as they layer
+    ctx.globalCompositeOperation = 'multiply';
+
+    // where another line meets another line, how should they meet?
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+
+    // flag for if cursor is depressed
+    let isDrawing = false;
+
+    // to draw ANY line, need to track points on the line. 
+    let lastX = 0;
+    let lastY = 0;
+    let hue = 0;
+
+    function draw(e) {
+
+        if (!isDrawing) return;  // early return, stops function if not mousedown
+        console.log(e);
+
+        //    now start a path
+        //    challenge: having hue depend on X or Y values
+        hue = e.x / 800 * 360;
+        ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+        ctx.beginPath();
+        // start drawing from   
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(e.offsetX, e.offsetY);  // e.offsetX etc come from the event that triggered
+        ctx.stroke();  // renders to page
+
+        // update the X,Y
+        lastX = e.offsetX;
+        lastY = e.offsetY;
+        // hue++  // hue able to interpret arbitrarily large values. takes mod
+    }
+
+
+    // too simplistic to just set isDrawing
+    // canvas.addEventListener('mousedown', () => isDrawing = true);
+    canvas.addEventListener('mousedown', (e) => {
+        isDrawing = true;
+        [lastX, lastY] = [e.offsetX, e.offsetY];
+    });
+
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', () => isDrawing = false);
+    canvas.addEventListener('mouseout', () => isDrawing = false);  // if mouse leaves window then reset isDrawing
+
+
+
 </script>
 
 <style>
-  html, body {
-    margin: 0;
-  }
+    html, body {
+        margin: 0;
+    }
 </style>
 
 </body>

@@ -1,46 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Console Tricks!</title>
+    <meta charset="UTF-8">
+    <title>Console Tricks!</title>
 </head>
 <body>
 
-  <p onClick="makeGreen()">×BREAK×DOWN×</p>
+<p onClick="makeGreen()">×BREAK×DOWN×</p>
 
-  <script>
+<script>
     const dogs = [{ name: 'Snickers', age: 2 }, { name: 'hugo', age: 8 }];
 
     function makeGreen() {
-      const p = document.querySelector('p');
-      p.style.color = '#BADA55';
-      p.style.fontSize = '50px';
+        const p = document.querySelector('p');
+        p.style.color = '#BADA55';
+        p.style.fontSize = '50px';
     }
 
-    // Regular
+    // Regular console.log
+    console.log('normal logging ');
 
     // Interpolated
+    console.log('interpolated logging %s', '👌👌');
 
-    // Styled
+    // Info - lowest level, just for reference
+    console.info('Catepillar lives: The egg takes 5 to 10 days, the larva/caterpillar and pupa/chrysalis each take about 10 to 14 days.');
+
+    // Styled console.log
+    // %c in front of thing want to style, then second argument is the styling 
+    console.log('formatted %c logging',
+        'font-size: 30px; background:red; text-shadow: 5px 5px 0 blue');
 
     // warning!
+    // console.warn
+    console.warn('console warning with stack trace of point of call!');
 
     // Error :|
-
-    // Info
+    console.error('PISS a full on error message!');
 
     // Testing
+    console.assert(1 === 1, 'assert has failed!');
+    const p = document.querySelector('p');
+    console.assert(p.classList.contains('something'), 'p does not contain something');
 
     // clearing
+    console.clear();
 
     // Viewing DOM Elements
+    // see all properties and methods available on the element. e.g. children, dataset, styles,...
+    console.dir(p);
 
     // Grouping together
+    dogs.forEach(dog => {
+        console.group(`${dog.name}`);
+        // console.groupCollapsed(`${dog.name}`);
+        console.log(`info for dog '${dog.name}'`);
+        console.log(`${dog.age} years old`);
+        console.groupEnd(`${dog.name}`);
+    })
+
+    // tables for arrays
+    console.table(dogs);
 
     // counting
+    console.count('something');
+    console.count('something');
+    console.count('something else');
+    console.count('something else');
+    console.count('something');
+    console.count('something');
+    console.count('something else');
 
     // timing
+    // need to pass the SAME STRING as used to start the timer!
+    console.time('fetching data');
 
-  </script>
+    fetch('https://api.github.com/users/w0rdsm1th')
+        .then(data => data.json())
+        .then(data => {
+            console.timeEnd('fetching data');
+            console.log(data);
+        });
+
+
+
+
+</script>
 </body>
 </html>

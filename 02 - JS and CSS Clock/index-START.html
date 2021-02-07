@@ -62,13 +62,64 @@
       background: black;
       position: absolute;
       top: 50%;
+      /*  so that rotate is called on very right hand x-axis*/
+      transform-origin: 100%;
+      /*  divs are blocks, appear left to right. necessary to 90deg rotate them so they start at 12o'clock*/
+        transform: rotate(90deg);
+        transition: all 0.05s;
+        transition-timing-function: ease-in-out;
     }
+    
+    /* extra styling inteneded to reshape the different hands */
+    .hour-hand {
+        /*reducing width alone also changes the x,y location*/
+        /*width: 30%;*/
+        /*top is y-axis placement in page...*/
+        /*top: 30%;*/
+        /*height is thickness of the line*/
+        /*height: 3px;*/
+    }    
+    .min-hand {
+        /*top: 40%;*/
+        /*height: 4px;*/
+    }    
 
   </style>
 
   <script>
+      // The querySelector() method returns the first element that matches a specified CSS selector(s) in the document.
+      const secondHand = document.querySelector('.second-hand')
+      const minsHand = document.querySelector('.min-hand')
+      const hourHand = document.querySelector('.hour-hand')
+    
+      // starting with second hand because most frequent to update
+    function setDate() {
+        const now = new Date();
+        const seconds = now.getSeconds();
+        // turning the seconds passed into a circular degree rotation
+        const secondsDegrees = seconds*6 + 90;
+        //applying a style 
+        secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
+        // console.log(secondsDegrees);
+        
+        //
+        const minutes = now.getMinutes();
+        const minutesDegress = (minutes*6) + 90;
+        minsHand.style.transform = `rotate(${minutesDegress}deg)`;
+        console.log("minutes: ", minutesDegress);
 
-
+        const hours = now.getHours();
+        const hoursDegress = (hours*30) + 90;
+        hourHand.style.transform = `rotate(${hoursDegress}deg)`;
+        console.log("hours: ", hoursDegress);
+        
+    //    bug: when a hand reaches the 0 position, it 'rotates to 1 degree' anti-clockwise
+        // fix: changing the logic of how '0' degrees are calculated. continuous sum and using modulo?
+        // at 0degrees momentarily changing the transition 
+    }
+    
+    setInterval(setDate, 1000);
+    
   </script>
 </body>
 </html>

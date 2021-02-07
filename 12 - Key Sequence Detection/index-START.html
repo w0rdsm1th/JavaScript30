@@ -1,12 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Key Detection</title>
-  <script type="text/javascript" src="https://www.cornify.com/js/cornify.js"></script>
+    <meta charset="UTF-8">
+    <title>Key Detection</title>
+    <script type="text/javascript" src="https://www.cornify.com/js/cornify.js"></script>
 </head>
 <body>
 <script>
+ // where a == b doesnt work so use https://masteringjs.io/tutorials/fundamentals/compare-arrays
+    function arrayEquals(a, b) {
+        return Array.isArray(a) &&
+            Array.isArray(b) &&
+            a.length === b.length &&
+            a.every((val, index) => val === b[index]);
+    }
+
+    <!--    tracking whenever somebody presses a key, push it into an array, check for last N-->
+
+    let konamiMAGIC = ['ArrowUp', 'ArrowDown', 'ArrowUp', 'ArrowDown',
+        'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 
+        'a', 'b', ];  // actual magic sequence
+    // let konamiMAGIC = ['a',];
+    let keysPressed = [];
+    window.addEventListener('keyup', (e) => {
+        console.log(e.key);
+        keysPressed.push(e.key);
+        
+        /* 
+        * major learning: this gets arbitrarily big, better to splice to ensure only as long as we want
+        * */
+        
+        if ((keysPressed.length >= konamiMAGIC.length) &&  // if long enough 
+            arrayEquals(keysPressed.slice(-konamiMAGIC.length, keysPressed.length), konamiMAGIC)) {
+            console.warn('MY GOD!')
+            cornify_add();
+        }
+    })
+
 </script>
 </body>
 </html>

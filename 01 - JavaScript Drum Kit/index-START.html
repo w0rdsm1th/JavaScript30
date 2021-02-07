@@ -1,64 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>JS Drum Kit</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>JS Drum Kit</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 
-  <div class="keys">
+<div class="keys">
     <div data-key="65" class="key">
-      <kbd>A</kbd>
-      <span class="sound">clap</span>
+        <kbd>A</kbd>
+        <span class="sound">clap</span>
     </div>
     <div data-key="83" class="key">
-      <kbd>S</kbd>
-      <span class="sound">hihat</span>
+        <kbd>S</kbd>
+        <span class="sound">hihat</span>
     </div>
     <div data-key="68" class="key">
-      <kbd>D</kbd>
-      <span class="sound">kick</span>
+        <kbd>D</kbd>
+        <span class="sound">kick</span>
     </div>
     <div data-key="70" class="key">
-      <kbd>F</kbd>
-      <span class="sound">openhat</span>
+        <kbd>F</kbd>
+        <span class="sound">openhat</span>
     </div>
     <div data-key="71" class="key">
-      <kbd>G</kbd>
-      <span class="sound">boom</span>
+        <kbd>G</kbd>
+        <span class="sound">boom</span>
     </div>
     <div data-key="72" class="key">
-      <kbd>H</kbd>
-      <span class="sound">ride</span>
+        <kbd>H</kbd>
+        <span class="sound">ride</span>
     </div>
     <div data-key="74" class="key">
-      <kbd>J</kbd>
-      <span class="sound">snare</span>
+        <kbd>J</kbd>
+        <span class="sound">snare</span>
     </div>
     <div data-key="75" class="key">
-      <kbd>K</kbd>
-      <span class="sound">tom</span>
+        <kbd>K</kbd>
+        <span class="sound">tom</span>
     </div>
     <div data-key="76" class="key">
-      <kbd>L</kbd>
-      <span class="sound">tink</span>
+        <kbd>L</kbd>
+        <span class="sound">tink</span>
     </div>
-  </div>
+</div>
 
-  <audio data-key="65" src="sounds/clap.wav"></audio>
-  <audio data-key="83" src="sounds/hihat.wav"></audio>
-  <audio data-key="68" src="sounds/kick.wav"></audio>
-  <audio data-key="70" src="sounds/openhat.wav"></audio>
-  <audio data-key="71" src="sounds/boom.wav"></audio>
-  <audio data-key="72" src="sounds/ride.wav"></audio>
-  <audio data-key="74" src="sounds/snare.wav"></audio>
-  <audio data-key="75" src="sounds/tom.wav"></audio>
-  <audio data-key="76" src="sounds/tink.wav"></audio>
+<!-- deprecated -->
+<!--<audio data-key="65" src="sounds/clap.wav"></audio>-->
+<!--<audio data-key="83" src="sounds/hihat.wav"></audio>-->
+<!--<audio data-key="68" src="sounds/kick.wav"></audio>-->
+<!--<audio data-key="70" src="sounds/openhat.wav"></audio>-->
+<!--<audio data-key="71" src="sounds/boom.wav"></audio>-->
+<!--<audio data-key="72" src="sounds/ride.wav"></audio>-->
+<!--<audio data-key="74" src="sounds/snare.wav"></audio>-->
+<!--<audio data-key="75" src="sounds/tom.wav"></audio>-->
+<!--<audio data-key="76" src="sounds/tink.wav"></audio>-->
+
+<audio data-code="KeyA" src="sounds/clap.wav"></audio>
+<audio data-code="KeyS" src="sounds/hihat.wav"></audio>
+<audio data-code="KeyD" src="sounds/kick.wav"></audio>
+<audio data-code="KeyF" src="sounds/openhat.wav"></audio>
+<audio data-code="KeyG" src="sounds/boom.wav"></audio>
+<audio data-code="KeyH" src="sounds/ride.wav"></audio>
+<audio data-code="KeyJ" src="sounds/snare.wav"></audio>
+<audio data-code="KeyK" src="sounds/tom.wav"></audio>
+<audio data-code="KeyL" src="sounds/tink.wav"></audio>
+
+<!--//load Pizzicato from CDN-->
+<!--https://alemangui.github.io/pizzicato/-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pizzicato/0.6.4/Pizzicato.min.js"></script>
 
 <script>
+    window.addEventListener('keydown', function(e) {
+            // console.log(e.code);  // just querying the attributes of keydown events
 
+            // manipulating the tile elements in the html
+            const tile = document.querySelector(`div[data-key="${e.keyCode}"]`);
+
+            // ES6 template strings: `${}`
+            // const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);  // deprecated warning
+            //https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode
+            const audio = document.querySelector(`audio[data-code="${e.code}"]`);
+            // console.log(audio.src);
+
+            // issue of repeated pressing. that audio element is n-seconds long.
+            // if ask already playing audio element to play then will not play when call .play()
+            // solution: setting the current time to 0 before ask it to play
+            audio.currentTime = 0;
+
+            if (!audio) return;  // early return
+            
+            // adding reverb. issue of Pizzicato initialisation from file 
+            // const pz_audio = new Pizzicato.Sound(audio.src);
+            // var reverb = new Pizzicato.Effects.Reverb({
+            //     time: 0.01,
+            //     decay: 0.01,
+            //     reverse: false,
+            //     mix: 0.5
+            // });
+            // pz_audio.addEffect(reverb);
+            
+            var out_arr = [];
+            var i;
+            for (i = 1; i < 31; i++) {
+                out_arr.push(`# day${i}:`);
+            }
+            console.log(out_arr);
+            
+            audio.play();
+
+            // filter for only the transform transition, and then remove the CSS class 'playing' which 
+            // then removes the yellow box and 1.1 scaling as per CSS
+            function removeTransition(e) {
+                if (e.propertyName !== 'transform') return;
+                console.log(this);  // debug only, 
+                e.target.classList.remove('playing');
+            }
+
+            // adding the CSS .playing class
+            // tile.classList.add('playing');
+            // tile.classList.remove('playing');
+            tile.classList.toggle('playing');
+            // keeping the JS timeouts and CSS timeouts 'consistent': RISK that below conflicts with the CSS
+            // timing and 
+            // setTimeout(function (){}, 0.7);
+            // better: transitionEnd Event. an object knows that it was 'transitioned' from scale or colour
+
+            // just select all the elements with class 'key' in the DOM
+            const allkeys = document.querySelectorAll('.key');
+            // console.log(allkeys);  // just querying the attributes of keydown events
+            // then manipulate the keys. Can't listen for 
+            allkeys.forEach(tile => tile.addEventListener('transitionend', removeTransition))
+
+            // extension: double-tapping
+
+        }
+    );
 </script>
 
 

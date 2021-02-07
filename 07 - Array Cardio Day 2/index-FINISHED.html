@@ -57,7 +57,8 @@
     console.log(index);
 
     // comments.splice(index, 1);
-
+    
+    // 'redux world' pattern for creating new array of the comments WITHOUT index object
     const newComments = [
       ...comments.slice(0, index),
       ...comments.slice(index + 1)
